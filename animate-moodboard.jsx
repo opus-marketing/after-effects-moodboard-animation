@@ -105,94 +105,67 @@ var config = ctrl1.add('edittext {properties: {name: "config"}}');
 var layoutBtn = layouts.add("button", undefined, undefined, {name: "layoutBtn"}); 
     layoutBtn.text = "Create Layout"; 
 
-function SnpCreateDynamicScriptUI() 
-{ 
-    this.windowRef = null;
-}
+    // TIME
+    // ====
+    var time = dialog.add("panel", undefined, undefined, {name: "time"}); 
+        time.text = "Timing"; 
+        time.orientation = "column"; 
+        time.alignChildren = ["left","top"]; 
+        time.spacing = 10; 
+        time.margins = 10; 
     
+    // BEATS
+    // =====
+    var beats = time.add("group", undefined, {name: "beats"}); 
+        beats.orientation = "row"; 
+        beats.alignChildren = ["left","center"]; 
+        beats.spacing = 10; 
+        beats.margins = 0; 
     
-/**
- Functional part of this snippet, creates the modeless dialog and its components.
-Defines the behavior in an event handler for the list component.
-
-@return True if the snippet ran as expected, false otherwise
-@type Boolean
-*/
-
-SnpCreateDynamicScriptUI.prototype.run = function() 
-  {
-      $.writeln("About to run SnpCreateDynamicScriptUI");
-      // Define components
-      var res =
-             "palette { \
-                     whichInfo: DropDownList { preferredSize: [100, 20],  alignment:'left' }, \
-                     allGroups: Panel { text: 'Test', orientation:'stack', \
-                             info: Group { orientation: 'column', \
-                                     name: Group { orientation: 'row', \
-                                             s: StaticText { text:'Guide Position:' }, \
-                                             e: EditText { preferredSize: [200, 20] } \
-                                             c: Checkbox {  } \
-                                     } \
-                             }, \
-                             workInfo: Group { orientation: 'column', \
-                                     name: Group { orientation: 'row', \
-                                             s: StaticText { text:'Company name:' }, \
-                                             e: EditText { preferredSize: [200, 20] } \
-                                     } \
-                                     }, \
-                     }, \
-                     buttons: Group { orientation: 'row', alignment: 'right', \
-                             okBtn: Button { text:'OK', properties:{name:'ok'} }, \
-                             cancelBtn: Button { text:'Cancel', properties:{name:'cancel'} }, \
-                             guideBtn: Button { text:'Create Guide', properties:{name:'guide'} }, \
-                             layoutBtn: Button { text:'Create Layout', properties:{name:'layout'} } \
-                     } \
-             }";
-      // Create the dialog with the components
-      var win = new Window (res);	
-      this.windowRef = win;
+    var statictext1 = beats.add("statictext", undefined, undefined, {name: "statictext1"}); 
+        statictext1.text = "BPM"; 
     
-      // Define the behavior for the drop-down list that changes the display
-      win.whichInfo.onChange = function () 
-      {
-          // In this context, "this" refers to the list component object
-          if (this.selection != null) 
-          {
-              for (var g = 0; g < this.items.length; g++)
-              {
-                  //hide all other groups
-                  this.items[g].group.visible = false; 
-              }
-              //show this group
-              this.selection.group.visible = true;
-          }
-      }
+    var bpm = beats.add('edittext {properties: {name: "bpm"}}'); 
+        bpm.text = "120"; 
     
-      // write user input to variables
-      win.allGroups.info.name.e.onChange = function() { guidePos = this.text; }
-      win.allGroups.info.name.c.onChange = function() { guideHorizontal = this.value; alert(this.value); }
+    // OFFSET
+    // ======
+    var offset = time.add("group", undefined, {name: "offset"}); 
+        offset.orientation = "row"; 
+        offset.alignChildren = ["left","center"]; 
+        offset.spacing = 10; 
+        offset.margins = 0; 
     
-      // Define the button behavior
-      win.buttons.okBtn.onClick = function () { this.parent.parent.close(1); };
-      win.buttons.cancelBtn.onClick = function () { this.parent.parent.close(2); };
+    var statictext2 = offset.add("statictext", undefined, undefined, {name: "statictext2"}); 
+        statictext2.text = "Offset"; 
+    
+    var offsetBeats = offset.add('edittext {properties: {name: "offsetBeats"}}'); 
+        offsetBeats.text = "4"; 
+    
+    // TIME
+    // ====
+    var offsetBtn = time.add("button", undefined, undefined, {name: "offsetBtn"}); 
+        offsetBtn.text = "Offset Layers"; 
 
 
-    showWindow(dialog);
 
-    // write user input to variables
-    dialog.guides.ctrl.pos.onChange = function() { guidePos = this.text; }
-    dialog.guides.ctrl.horizontal.onChange = function() { guideHorizontal = this.value; }
+showWindow(dialog);
 
-    dialog.layouts.ctrl1.config.onChange = function() { layerElements = eval(this.text); }
+// write user input to variables
+dialog.guides.ctrl.pos.onChange = function() { guidePos = this.text; }
+dialog.guides.ctrl.horizontal.onChange = function() { guideHorizontal = this.value; }
 
-    // Define the button behavior
-    // dialog.buttons.okBtn.onClick = function () { this.parent.parent.close(1); };
-    // dialog.buttons.cancelBtn.onClick = function () { this.parent.parent.close(2); };
+dialog.layouts.ctrl1.config.onChange = function() { layerElements = eval(this.text); }
 
-    dialog.guides.guideBtn.onClick = createGuideline //create Guideline
-    dialog.layouts.layoutBtn.onClick = createMaskedLayers // new create Mask function
+// Define the button behavior
+// dialog.buttons.okBtn.onClick = function () { this.parent.parent.close(1); };
+// dialog.buttons.cancelBtn.onClick = function () { this.parent.parent.close(2); };
+
+dialog.guides.guideBtn.onClick = createGuideline //create Guideline
+dialog.layouts.layoutBtn.onClick = createMaskedLayers // link createMaskedLayers function to button
+
+dialog.time.offsetBtn.onClick = offsetLayer // new create Mask function
   
-}
 
 ////////////////////////////////////////////
 //
@@ -306,6 +279,8 @@ function createMaskedLayers () {
     while( i < layers.length ) {
         
         createMask(layers[i].layer, layers[i].xoffset, layers[i].yoffset, layers[i].width, layers[i].height);
+
+        offsetLayer(layers[i].layer);
         
         i++;
     }
@@ -320,6 +295,28 @@ function createMask (layer, x,y,w,h) {
     myShape.vertices = [[x,y],[x,y+h],[x+w,y+h],[x+w,y]];
     myShape.closed = true;
     myMaskShape.setValue(myShape);
+}
+
+function offsetLayer(layer) {
+
+    //get selected layers
+    if(typeof(layer) == "undefined" || layer == null){ 
+        var curItem = app.project.activeItem;
+        var selectedLayers = curItem.selectedLayers;
+
+        alert("setting layer by selection");
+
+        layer = selectedLayers[0]; 
+    }
+    
+    alert(layer.id);
+
+    // calculate frame offset
+    var framerate = app.project.activeItem.frameRate;
+
+    //
+    alert(framerate);
+
 }
 
 
