@@ -44,7 +44,7 @@ Code for Import https://scriptui.joonas.me — (Triple click to select):
 // DIALOG
 // ======
 var dialog = createDockableUI(this);
-    dialog.text = "Dialog"; 
+    dialog.text = "Animate Moodboards v0.8.4"; 
     dialog.orientation = "column"; 
     dialog.alignChildren = ["center","top"]; 
     dialog.spacing = 10; 
@@ -281,6 +281,7 @@ function createMaskedLayers () {
         createMask(layers[i].layer, layers[i].xoffset, layers[i].yoffset, layers[i].width, layers[i].height);
 
         offsetLayer(layers[i].layer);
+        animateMaskedLayer(layers[i].layer, layers[i].height, compHeight, 0);
         
         i++;
     }
@@ -309,13 +310,13 @@ function offsetLayer(layer) {
         layer = selectedLayers[0]; 
     }
     
-    alert(layer.id);
+    // alert(layer.id);
 
     // calculate frame offset
     var framerate = app.project.activeItem.frameRate;
 
     //
-    alert(framerate);
+    // alert(framerate);
 
 }
 
@@ -326,4 +327,12 @@ function createGuideline() {
   }else{
       app.project.activeItem.addGuide(1, guidePos);
   }
+}
+
+
+function animateMaskedLayer(layer, h, compH, time) {
+
+    value = compH/2 - h;
+
+    layer.position.setValueAtTime(value, time);
 }
