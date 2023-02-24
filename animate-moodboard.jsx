@@ -193,8 +193,8 @@ function createMaskedLayers () {
     var curItem = app.project.activeItem;
     var selectedLayers = curItem.selectedLayers;
 
-    var compWidth = 1920;
-    var compHeight = 1080;
+    var compWidth = curItem.width;
+    var compHeight = curItem.height;
 
     
     
