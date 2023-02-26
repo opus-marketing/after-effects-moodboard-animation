@@ -11,6 +11,9 @@
 var guidePos = 500;
 var guideHorizontal = false;
 
+var beatsOffset = 4;
+var beatDuration = .5;
+
 function createDockableUI(thisObj) {
     var dialog =
         thisObj instanceof Panel
@@ -157,6 +160,9 @@ dialog.guides.ctrl.horizontal.onChange = function() { guideHorizontal = this.val
 
 dialog.layouts.ctrl1.config.onChange = function() { layerElements = eval(this.text); }
 
+dialog.time.beats.bpm.onChange = function() { beatDuration = 60/this.text; } //calculates the duration of one beat in seconds
+dialog.time.offset.offsetBeats.onChange = function() { beatsOffset = this.text; } //number of beats layers get offset
+
 // Define the button behavior
 // dialog.buttons.okBtn.onClick = function () { this.parent.parent.close(1); };
 // dialog.buttons.cancelBtn.onClick = function () { this.parent.parent.close(2); };
@@ -280,8 +286,7 @@ function createMaskedLayers () {
         
         createMask(layers[i].layer, layers[i].xoffset, layers[i].yoffset, layers[i].width, layers[i].height);
 
-        offsetLayer(layers[i].layer);
-        animateMaskedLayer(layers[i].layer, layers[i].height, compHeight, 0);
+        animateMaskedLayer(layers[i].layer, layers[i].height, compHeight, compWidth, 0);
         
         i++;
     }
@@ -298,28 +303,6 @@ function createMask (layer, x,y,w,h) {
     myMaskShape.setValue(myShape);
 }
 
-function offsetLayer(layer) {
-
-    //get selected layers
-    if(typeof(layer) == "undefined" || layer == null){ 
-        var curItem = app.project.activeItem;
-        var selectedLayers = curItem.selectedLayers;
-
-        alert("setting layer by selection");
-
-        layer = selectedLayers[0]; 
-    }
-    
-    // alert(layer.id);
-
-    // calculate frame offset
-    var framerate = app.project.activeItem.frameRate;
-
-    //
-    // alert(framerate);
-
-}
-
 
 function createGuideline() {
   if(guideHorizontal){
@@ -330,9 +313,17 @@ function createGuideline() {
 }
 
 
-function animateMaskedLayer(layer, h, compH, time) {
+function animateMaskedLayer(layer, h, compH, compW, t) {
 
-    value = compH/2 - h;
+    var x = compW/2;
+    var y1 = compH/2 - h;
+    var y2 = compH/2;
 
-    layer.position.setValueAtTime(value, time);
+    //calculate time offset for animation end
+    var offset = beatsOffset*beatDuration;
+    var animEnd = layer.inPoint + offset;
+
+    layer.position.setValueAtTime(layer.inPoint, [x,y1]);
+    layer.position.setValueAtTime(animEnd, [x,y2]);
+
 }
