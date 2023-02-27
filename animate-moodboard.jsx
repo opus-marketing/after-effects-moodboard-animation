@@ -339,7 +339,7 @@ function offsetLayer() {
 
     while( i < layers.length ) {
 
-        inP = inP + i*(beatsOffset*beatDuration);
+        start = i*(beatsOffset*beatDuration);
         layers[i].startTime = start;
 
         i++;
