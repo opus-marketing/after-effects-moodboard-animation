@@ -226,9 +226,9 @@ function createMaskedLayers () {
     // & create layers
     // -----------------------------
 
-    var c=0;
+    var c=0; //counter for loop
     var lc = 0; //index for the layer elements
-    var layers = [];
+    var layers = []; //variable to store generated layers
 
     while( c < layerElements.length){
         
@@ -283,7 +283,7 @@ function createMaskedLayers () {
         
         createMask(layers[i].layer, layers[i].xoffset, layers[i].yoffset, layers[i].width, layers[i].height);
 
-        animateMaskedLayer(layers[i].layer, layers[i].height, compHeight, compWidth, 0);
+        animateMaskedLayer(layers[i].layer, layers[i].height, compHeight, compWidth, layers[i].yoffset);
         
         i++;
     }
@@ -310,11 +310,15 @@ function createGuideline() {
 }
 
 
-function animateMaskedLayer(layer, h, compH, compW, t) {
+function animateMaskedLayer(layer, h, compH, compW, yOff) {
 
     var x = compW/2;
     var y1 = compH/2 - h;
     var y2 = compH/2;
+
+    //animate in from bottom
+    if(yOff > 0) y1 = compH/2 + (compH - yOff);
+
 
     //calculate time offset for animation end
     var offset = beatsOffset*beatDuration;
