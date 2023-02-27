@@ -47,7 +47,7 @@ Code for Import https://scriptui.joonas.me — (Triple click to select):
 // DIALOG
 // ======
 var dialog = createDockableUI(this);
-    dialog.text = "Animate Moodboards v0.8.4"; 
+    dialog.text = "Animate Moodboards v0.8.5"; 
     dialog.orientation = "column"; 
     dialog.alignChildren = ["center","top"]; 
     dialog.spacing = 10; 
@@ -164,9 +164,6 @@ dialog.time.beats.bpm.onChange = function() { beatDuration = 60/this.text; } //c
 dialog.time.offset.offsetBeats.onChange = function() { beatsOffset = this.text; } //number of beats layers get offset
 
 // Define the button behavior
-// dialog.buttons.okBtn.onClick = function () { this.parent.parent.close(1); };
-// dialog.buttons.cancelBtn.onClick = function () { this.parent.parent.close(2); };
-
 dialog.guides.guideBtn.onClick = createGuideline //create Guideline
 dialog.layouts.layoutBtn.onClick = createMaskedLayers // link createMaskedLayers function to button
 
@@ -326,4 +323,21 @@ function animateMaskedLayer(layer, h, compH, compW, t) {
     layer.position.setValueAtTime(layer.inPoint, [x,y1]);
     layer.position.setValueAtTime(animEnd, [x,y2]);
 
+}
+
+function offsetLayer() {
+
+    var curItem = app.project.activeItem;
+    var layers = curItem.selectedLayers;
+
+    var i = 0;
+    var start = layers[0].startTime;
+
+    while( i < layers.length ) {
+
+        inP = inP + i*(beatsOffset*beatDuration);
+        layers[i].startTime = start;
+
+        i++;
+    }
 }
