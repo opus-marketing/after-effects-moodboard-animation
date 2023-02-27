@@ -319,8 +319,8 @@ function animateMaskedLayer(layer, h, compH, compW, yOff) {
     var y1 = compH/2 - h;
     var y2 = compH/2;
 
-    //animate in from bottom
-    if(yOff > 0) y1 = compH/2 + (compH - yOff);
+    //animate in from bottom for all but top layer in any column
+    if(yoffset > 0) y1 = 1.5*compH - yOff;
 
 
     //calculate time offset for animation end
