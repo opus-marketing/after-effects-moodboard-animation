@@ -51,6 +51,7 @@ var dialog = createDockableUI(this);
     dialog.alignChildren = ["center","top"]; 
     dialog.spacing = 10; 
     dialog.margins = 16; 
+    dialog.add ("scrollbar");
 
 // GUIDES
 // ======
