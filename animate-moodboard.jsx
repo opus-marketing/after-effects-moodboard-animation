@@ -288,6 +288,9 @@ function createMaskedLayers () {
         i++;
     }
 
+    //move first layer to top of stack
+    selectedLayers[0].moveBefore(layers[1].layer);
+
 }
 
 function createMask (layer, x,y,w,h) {
