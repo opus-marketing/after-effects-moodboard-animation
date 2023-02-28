@@ -44,7 +44,7 @@ Code for Import https://scriptui.joonas.me — (Triple click to select):
 // DIALOG
 // ======
 var dialog = createDockableUI(this);
-    dialog.text = "Animate Moodboards v0.9"; 
+    dialog.text = "Animate Moodboards v0.9.1"; 
     dialog.orientation = "column"; 
     dialog.alignChildren = ["fill","top"]; 
     dialog.spacing = 10; 
@@ -146,7 +146,7 @@ var layouts = dialog.add("panel", undefined, undefined, {name: "layouts"});
         ctrl1.margins = 0; 
 
     var config = ctrl1.add('edittext {properties: {name: "config"}}'); 
-        config.text = "Configuration for splitting layer"; 
+        config.text = "Configuration for custom layout"; 
         config.preferredSize.width = 250; 
 
     // LAYOUTS BTN
