@@ -263,6 +263,7 @@ function createMaskedLayers () {
     var gridColumns = 0;
 
     
+    //calculate number of columns
     var i=0;
     while( i < layerElements.length){
         gridColumns = gridColumns + layerElements[i][0];
@@ -287,7 +288,10 @@ function createMaskedLayers () {
 
     while( c < layerElements.length){
         
+        //get elements for the current column
         var g = layerElements[c][1];
+        
+        //calculate the height of a row
         var sg = 0;
         var ic = 0;
         while( ic < g.length){
@@ -310,7 +314,16 @@ function createMaskedLayers () {
             var xoffset = columnWidth * c;
 
             if(cl > 0){
-                var yoffset = rowHeight * layerElements[c][1][cl-1];
+
+                //calculate height of elements above current element
+                var ii = 0;
+                var yoffsetfactor = 0;
+                while( ii < cl-1){
+                    yoffsetfactor += layerElements[c][1][ii];
+                    ii++;
+                }
+
+                var yoffset = rowHeight * yoffsetfactor;
             }else{
                 var yoffset = 0;
             }
