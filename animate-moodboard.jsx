@@ -44,7 +44,7 @@ Code for Import https://scriptui.joonas.me — (Triple click to select):
 // DIALOG
 // ======
 var dialog = createDockableUI(this);
-    dialog.text = "Animate Moodboards v0.9.1"; 
+    dialog.text = "Animate Moodboards v0.9.2"; 
     dialog.orientation = "column"; 
     dialog.alignChildren = ["fill","top"]; 
     dialog.spacing = 10; 
@@ -311,14 +311,23 @@ function createMaskedLayers () {
             var lheight = rowHeight * layerElements[c][1][cl];
 
             // calculate element offset
-            var xoffset = columnWidth * c;
+            
+            //calculate width of elements left of the current element
+                var ii = 0;
+                var xoffsetfactor = 0;
+                while( ii < c){
+                    xoffsetfactor = xoffsetfactor + layerElements[ii][0];
+                    ii++;
+                }
+
+            var xoffset = columnWidth * xoffsetfactor;
 
             if(cl > 0){
 
                 //calculate height of elements above current element
                 var ii = 0;
                 var yoffsetfactor = 0;
-                while( ii < cl-1){
+                while( ii < cl){
                     yoffsetfactor += layerElements[c][1][ii];
                     ii++;
                 }
